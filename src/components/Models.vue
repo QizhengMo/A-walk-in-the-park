@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div v-if="model-title === 'Morning Star II'">
+    <div class="model-area">
+        <div v-if="model_title === 'Morning Star II'">
             <vue-three-sixty 
                 :amount=35
                 imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
@@ -8,7 +8,7 @@
             />
         </div>
 
-        <div v-else-if="model-title === 'Building Blocks of Life'">
+        <div v-else-if="model_title === 'Building Blocks of Life'">
             <div class="sketchfab-embed-wrapper">
                 <iframe
                     title="A 3D model"
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div v-else-if="model-title === 'Apparatus for Germination of Achaemienis Ambulatii (Pony Plant)'">
+        <div v-else-if="model_title === 'Apparatus for Germination of Achaemienis Ambulatii (Pony Plant)'">
             <vue-three-sixty 
                 :amount=35
                 imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
@@ -29,7 +29,7 @@
             />
         </div>
 
-        <div v-else-if="model-title === 'Plant Form'">
+        <div v-else-if="model_title === 'Plant Form'">
             <vue-three-sixty 
                 :amount=35
                 imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
@@ -37,7 +37,7 @@
             />
         </div>
 
-        <div v-else-if="model-title === 'Walter Hill Fountain'">
+        <div v-else-if="model_title === 'Walter Hill Fountain'">
             <div class="sketchfab-embed-wrapper">
                 <iframe
                     title="A 3D model"
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div v-else-if="model-title === 'Sundial - Hibiscus Garden'">
+        <div v-else-if="model_title === 'Sundial - Hibiscus Garden'">
             <div class="sketchfab-embed-wrapper">
                 <iframe
                     title="A 3D model"
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div v-else-if="model-title === 'Jemmy Morrill and the brolgas'">
+        <div v-else-if="model_title === 'Jemmy Morrill and the brolgas'">
             <div class="sketchfab-embed-wrapper">
                 <iframe
                     title="A 3D model"
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div v-else-if="model-title === 'Big Red (Red Kangaroo)'">
+        <div v-else-if="model_title === 'Big Red (Red Kangaroo)'">
             <vue-three-sixty 
                 :amount=35
                 imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
@@ -84,7 +84,7 @@
             />
         </div>
 
-        <div v-else-if="model-title === 'Undercurrent'">
+        <div v-else-if="model_title === 'Undercurrent'">
             <vue-three-sixty 
                 :amount=35
                 imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
@@ -102,6 +102,31 @@
 <script>
 export default {
     name: "Models",
-    props: ["model-title"]
+    props: ["model_title"]
 }
 </script>
+
+<style scoped>
+
+    .model-area{
+        height: 100%;
+        max-height: 100%;
+    }
+
+    .model-area div{
+        height: 100%;
+        min-height: 100%;
+    }
+
+    iframe {
+        height: 100%;
+        width: 100%;
+        min-height: 100%;
+    }
+
+    vue-three-sixty {
+        height: 100%;
+        width: 100%;
+        min-height: 100%;
+    }
+</style>

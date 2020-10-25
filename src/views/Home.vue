@@ -2,7 +2,6 @@
   <v-container id="root">
     <MyHeader></MyHeader>
 
-
     <div id="main">
       <!-- Slide Show -->
       <v-carousel
@@ -14,7 +13,9 @@
         <v-carousel-item v-for="(art, i) in arts" :key="i">
           <v-sheet height="100%" tile>
             <v-row class="fill-height" align="center" justify="center">
-              <div class="display-3">ART {{ art["Item_title"] }}</div>
+              <div class="display-3">
+                ART {{art["Item_title"] }}
+              </div>
             </v-row>
           </v-sheet>
         </v-carousel-item>
@@ -53,35 +54,16 @@
       <v-overlay :z-index="zIndex" :value="overlay">
         <v-container class="black--text" id="overlay">
           <v-row>
-            <!-- ART 3D MODEL-->
             <v-col cols="6">
-              <!-- <div class="sketchfab-embed-wrapper">
-                <iframe
-                  title="A 3D model"
-                  src="https://sketchfab.com/models/eca4fdaddd504f2da24c0863c0c2333c/embed?autostart=0&amp;ui_controls=1&amp;ui_infos=1&amp;ui_inspector=1&amp;ui_stop=1&amp;ui_watermark=1&amp;ui_watermark_link=1"
-                  frameborder="0"
-                  allow="autoplay; fullscreen; vr"
-                  mozallowfullscreen="true"
-                  webkitallowfullscreen="true"
-                ></iframe>
-              </div> -->
-              <!-- <div
-                class="cloudimage-360"
-                data-folder="../assets/models/morning_star/"
-                data-filename="Layer {index}.jpg"
-                data-amount="35"
-                data-magnifier="3"
-                data-spin-reverse
-            ></div> -->
-                <vue-three-sixty 
-                :amount=35
-                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
-                fileName="Layer%20{index}.jpg"
-              />
+              <Models
+                v-bind:model_title="arts[model]['Item_title']"
+                id="model-area"
+              >
+              </Models>
             </v-col>
 
             <!-- ART Info-->
-            <v-col cols="6" style="overflow-y: scroll; height: 35vh">
+            <v-col cols="6" id="overlay-text">
               <h1>{{ arts[model]["Item_title"] }}</h1>
               <p>Artist: {{ arts[model]["Artist"] }}</p>
               <p>Material: {{ arts[model]["Material"] }}</p>
@@ -110,6 +92,7 @@
 
 <script>
 import MyHeader from "../components/MyHeader";
+import Models from "../components/Models";
 import { jsonp } from "vue-jsonp";
 
 export default {
@@ -117,21 +100,22 @@ export default {
 
   data() {
     return {
+      artsFilter: [
+        "Morning Star II",
+        "Building Blocks of Life",
+        "Apparatus for Germination of Achaemienis Ambulatii (Pony Plant)",
+        "Plant Form",
+        "Walter Hill Fountain",
+        "Sundial - Hibiscus Garden",
+        "Jemmy Morrill and the brolgas",
+        "Big Red (Red Kangaroo)",
+        "Undercurrent",
+      ],
       arts: [],
       model: 0,
-      isActive: [
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-      ],
+
+      // initial valye to control the indicator
+      isActive: [true, false, false, false, false, false, false, false, false],
       overlay: false,
       zIndex: 1001,
     };
@@ -150,16 +134,37 @@ export default {
 
   components: {
     MyHeader,
+    Models,
   },
 
-  mounted() {
+  created() {
+    let tempList;
+
     jsonp(
       "https://www.data.brisbane.qld.gov.au/data/api/3/action/datastore_search",
       {
         resource_id: "3c972b8e-9340-4b6d-8c7b-2ed988aa3343", // the resource id
-        q: "City Botanic Gardens, Brisbane CBD", // query for 'jones'
+        q: "City Botanic Gardens, Brisbane CBD",
       }
-    ).then((res) => (this.arts = res["result"]["records"]));
+    )
+      .then((res) => {
+        tempList = res["result"]["records"];
+      })
+      .then(() => {
+        tempList.forEach(
+          (element) => {
+            for (var i = 0; i < this.artsFilter.length; i++) {
+              if (element["Item_title"] === this.artsFilter[i]) {
+                this.arts[i] = element;
+              }
+            }
+          },
+
+          // this is necessary because VUEJS cannot detect index operation of the array
+          // we have to do these useless operation to invoke it
+          this.arts.push(this.arts.pop())
+        );
+      });
   },
 };
 </script>
@@ -211,7 +216,7 @@ export default {
 
 #overlay {
   background-color: white;
-  height: 50vh;
+  height: 70vh;
   width: 70vw;
   padding: 30px;
 
@@ -219,11 +224,13 @@ export default {
   border: solid 2px #03999e;
 }
 
-.sketchfab-embed-wrapper {
-  height: 100%;
+#overlay .row {
+  max-height: 100%;
+  min-height: 100%;
+  overflow: hidden;
 }
-.sketchfab-embed-wrapper iframe {
-  min-width: 100%;
+
+#model-area {
   min-height: 100%;
   height: 100%;
 }
