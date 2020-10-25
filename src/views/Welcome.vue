@@ -1,5 +1,5 @@
 <template>
-  <container id="root">
+  <div id="root">
     <div id="title">
       <h1>A Walk In</h1>
       <h1>The Park</h1>
@@ -9,7 +9,7 @@
       <router-link to="/main/home">Begin Tour</router-link>
     </button>
 
-  </container>
+  </div>
 </template>
 
 <style scoped>
