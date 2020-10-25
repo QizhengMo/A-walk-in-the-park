@@ -2,6 +2,7 @@
   <v-container id="root">
     <MyHeader></MyHeader>
 
+
     <div id="main">
       <!-- Slide Show -->
       <v-carousel
@@ -54,7 +55,7 @@
           <v-row>
             <!-- ART 3D MODEL-->
             <v-col cols="6">
-              <div class="sketchfab-embed-wrapper">
+              <!-- <div class="sketchfab-embed-wrapper">
                 <iframe
                   title="A 3D model"
                   src="https://sketchfab.com/models/eca4fdaddd504f2da24c0863c0c2333c/embed?autostart=0&amp;ui_controls=1&amp;ui_infos=1&amp;ui_inspector=1&amp;ui_stop=1&amp;ui_watermark=1&amp;ui_watermark_link=1"
@@ -63,7 +64,20 @@
                   mozallowfullscreen="true"
                   webkitallowfullscreen="true"
                 ></iframe>
-              </div>
+              </div> -->
+              <!-- <div
+                class="cloudimage-360"
+                data-folder="../assets/models/morning_star/"
+                data-filename="Layer {index}.jpg"
+                data-amount="35"
+                data-magnifier="3"
+                data-spin-reverse
+            ></div> -->
+                <vue-three-sixty 
+                :amount=35
+                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
+                fileName="Layer%20{index}.jpg"
+              />
             </v-col>
 
             <!-- ART Info-->
