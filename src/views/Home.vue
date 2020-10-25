@@ -74,8 +74,8 @@
                 data-spin-reverse
             ></div> -->
                 <vue-three-sixty 
-                :amount=35
-                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
+                :amount=27
+                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star2/"
                 fileName="Layer%20{index}.jpg"
               />
             </v-col>

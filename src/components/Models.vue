@@ -3,7 +3,7 @@
         <div v-if="model-title === 'Morning Star II'">
             <vue-three-sixty 
                 :amount=35
-                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star/"
+                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star2/"
                 fileName="Layer%20{index}.jpg"
             />
         </div>
