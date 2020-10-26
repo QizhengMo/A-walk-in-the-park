@@ -59,3 +59,17 @@ button a {
 </style>
 
 
+<script>
+
+export default {
+
+  name: "Welcome",
+
+  data: () => ({
+    //
+  }),
+  components: {
+    
+  }
+};
+</script>

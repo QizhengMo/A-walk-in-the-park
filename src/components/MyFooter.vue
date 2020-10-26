@@ -8,14 +8,32 @@
       <v-btn text to="home">
         Home
       </v-btn>
+      <v-btn text to="quiz">
+        Quiz
+      </v-btn>
       <v-btn text class="active" to="about">
         About
       </v-btn>
     </div>
 
-    <div v-else class="d-flex" id="btn-group">
+    <div v-else-if="currentRouteName === 'Quiz'" class="d-flex" id="btn-group">
+      <v-btn text to="home">
+        Home
+      </v-btn>
+      <v-btn text class="active" to="quiz">
+        Quiz
+      </v-btn>
+      <v-btn text to="about">
+        About
+      </v-btn>
+    </div>
+
+    <div v-else-if="currentRouteName === 'Home'" class="d-flex" id="btn-group">
       <v-btn text class="active" to="home">
         Home
+      </v-btn>
+      <v-btn text to="quiz">
+        Quiz
       </v-btn>
       <v-btn text to="about">
         About

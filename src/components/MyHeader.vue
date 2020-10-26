@@ -7,7 +7,7 @@
 
     <v-spacer></v-spacer>
 
-    <div class="d-flex" id="header-btn-group">
+    <div v-if="currentRouteName === 'Home'" class="d-flex" id="header-btn-group">
       <v-btn class="mx-2" fab color="white" @click="greet">
         <v-icon>mdi-comment-question-outline</v-icon>
       </v-btn>
@@ -31,6 +31,13 @@ export default {
   data: () => ({
     //
   }),
+
+  computed: {
+    currentRouteName() {
+      return this.$route.name;
+    },
+  },
+  
   components: {},
 
   methods: {
