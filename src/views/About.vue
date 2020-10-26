@@ -4,8 +4,8 @@
     <MyHeader></MyHeader>
     <v-container id="main" class="d-flex">
         <div id="about-box">
-          <h1>Hello</h1>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+          <h1>About Us</h1>
+          <p>A Walk In The Park aims to provide an immersive tour of the artwork present in the Brisbane City Botanical Garden from the comforts of your home. Through this interactive website, we aim to provide art enthusiasts and curious Brisbane residents an opportunity to experience these unique pieces of art that help decorate the Brisbane City Botanical Garden through a virtual walk through while allowing users to view 3 dimensional models of the artwork and to have the opportunity  to learn more about the art, artist, location and description.</p>
         </div>
     </v-container>
 

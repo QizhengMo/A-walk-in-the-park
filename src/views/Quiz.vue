@@ -3,18 +3,95 @@
 
     <MyHeader></MyHeader>
 
-    <v-container id="main">
+    <v-container v-if="questions.length != 0" id="main">
       <div id="quiz-title" class="content-box">
-        <h1>Challenge</h1>
+        <h1>Challenge</h1> <h1>Current Score: {{currentScore}}</h1>
       </div>
-      <div id="quiz-questions" class="content-box">
 
+      <div id="quiz-questions" class="content-box">
+        <h2>Q{{currentQuestion}}: {{questions[currentQuestion - 1][2]}}</h2>
+
+        <v-btn block class="white--text" color="#03999e" v-on:click="answerA">
+          {{questions[currentQuestion - 1][0]}}
+        </v-btn>
+
+        <v-btn block class="white--text" color="#03999e" v-on:click="answerB">
+          {{questions[currentQuestion - 1][1]}}
+        </v-btn>
       </div>
     </v-container>
-
-
   </v-container>
 </template>
+
+
+<script>
+import MyHeader from '../components/MyHeader'
+
+export default {
+
+  name: "About",
+
+  data: () => ({
+    currentQuestion: 1,
+    currentScore: 0,
+  }),
+
+  computed: {
+    arts() {
+      return this.$store.getters.arts().length != 0 ? this.$store.getters.arts() : [];
+    },
+    questions() {
+      
+      if (this.arts.length == 0) {
+        return [];
+      } else {
+        let questions = [];
+        for (var i = 0; i < this.arts.length; i++) {
+          var correctIndex = Math.floor(Math.random() * Math.floor(2));
+          var question = [];
+          question[correctIndex] = `${this.arts[i]['Artist']}`;
+          question[1 - correctIndex] = `${this.arts[Math.floor(Math.random() * Math.floor(9))]['Artist']}`;
+          question[2] = `Who is the Artist of ${this.arts[i]['Item_title']}`;
+          question[3] = correctIndex;
+
+          questions.push(question);
+        }
+        console.log(questions)
+        return questions;
+      }
+    },
+
+  },
+
+  mounted() {
+    if (this.arts.length == 0) {
+      this.$store.dispatch('fetchArts');
+    } 
+  },
+
+  methods: {
+    answerA() {
+      this.currentQuestion += 1;
+      if (this.questions[this.currentQuestion][3] === 0) {
+        this.currentScore += 1;
+      }
+    },
+
+    answerB() {
+      this.currentQuestion += 1;
+      if (this.questions[this.currentQuestion][3] === 1) {
+        this.currentScore += 1;
+      }
+    },
+  },
+
+  components: {
+    MyHeader,
+  },
+
+};
+</script>
+
 
 
 <style scoped>
@@ -52,32 +129,27 @@
 
 #quiz-title {
   height: 10vh;
+  padding-left: 20vw;
+  padding-right: 20px;
+  justify-content: space-between;
 }
 
 #quiz-questions{
   height: 50vh;
   margin-top: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 30px;
 }
 
 #quiz-title h1 {
   color: black;
 }
 
+button {
+  margin-top: 50px;
+}
+
 
 </style>
-
-<script>
-import MyHeader from '../components/MyHeader'
-
-export default {
-
-  name: "About",
-
-  data: () => ({
-    //
-  }),
-  components: {
-    MyHeader,
-  }
-};
-</script>

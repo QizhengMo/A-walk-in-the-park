@@ -23,8 +23,16 @@
 
       <!-- Bottom Control Delimeter -->
       <v-row justify="space-between" id="controller">
+        <v-progress-linear
+          color="#03999e"
+          buffer-value="0"
+          v-bind:value=progress
+          stream
+          id="progress-bar"
+        >
+        </v-progress-linear>
         <template v-for="(art, i) in arts">
-          <div class="v-col white--text" align="center" v-bind:key="i">
+          <div class="v-col white--text" align="center" v-bind:key="i" style="z-index : 2">
             <button
               @click="
                 isActive[model] = false;
@@ -33,7 +41,6 @@
               "
               v-bind:class="{ active: isActive[i] }"
             ></button>
-            <p>ART {{ i + 1 }}</p>
           </div>
         </template>
       </v-row>
@@ -52,7 +59,7 @@
 
       <!-- Popup Overlay -->
       <v-overlay :z-index="zIndex" :value="overlay">
-        <v-container class="black--text" id="overlay">
+        <v-container v-if="arts.length != 0" class="black--text" id="overlay">
           <v-row>
             <v-col cols="6">
               <Models
@@ -110,14 +117,16 @@ export default {
 
   computed: {
     arts() {
-      console.log(this.$store.getters.arts());
-      return this.$store.getters.arts();
+      return this.$store.getters.arts().length != 0 ? this.$store.getters.arts() : [];
+    },
+
+    progress() {
+      return this.model * (100/8);
     }
   },
 
   methods: {
     control: function () {
-      console.log(this.model);
       let i;
       for (i = 0; i < 11; i++) {
         this.isActive[i] = false;
@@ -131,7 +140,9 @@ export default {
     Models,
   },
 
+
   created() {
+    // fetch data when the home page is created
     this.$store.dispatch('fetchArts');
   }
 
@@ -173,6 +184,13 @@ export default {
   width: 20px;
   border-radius: 20px;
 }
+
+#progress-bar {
+  position: absolute;
+  top: 9px;
+  z-index: 1;
+}
+
 
 #learn-more-btn {
   position: fixed;
