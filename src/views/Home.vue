@@ -1,6 +1,6 @@
 <template>
   <v-container id="root">
-    
+
     <v-container id="header" class="d-flex">
       <div id="title">
         <h1>A Walk In</h1>
@@ -9,13 +9,14 @@
 
       <v-spacer></v-spacer>
 
-      <div class="d-flex" id="header-btn-group">
+      <div id="header-btn-group">
         <v-btn class="mx-2" fab color="white">
           <v-icon>mdi-comment-question-outline</v-icon>
         </v-btn>
 
-        <v-btn class="mx-2" fab color="white">
-          <v-icon>mdi-skip-next</v-icon>
+        <v-btn class="mx-2" fab color="white" @click="play">
+          <v-icon v-if="paused">mdi-play</v-icon>
+          <v-icon v-if="!paused">mdi-pause</v-icon>
         </v-btn>
 
         <v-btn class="mx-2" fab color="white" @click="mute">
@@ -26,20 +27,17 @@
     </v-container>
 
     <div id="main">
-      <v-sheet v-if="arts.length != 0" height="100%" tile>
-        <v-row class="fill-height" align="center" justify="center">
-          <div>
-            <video
-              ref="mainVideo"
-              autoplay
-              muted
-              :src="videoLink"
-              @timeupdate="currentTime = $event.target.currentTime"
-            >
-            </video>
-          </div>
-        </v-row>
-      </v-sheet>
+
+      <div v-if="arts.length != 0">
+        <video
+          ref="mainVideo"
+          autoplay
+          :muted="muted"
+          :src="videoLink"
+          @timeupdate="currentTime = $event.target.currentTime"
+        >
+        </video>
+      </div>
 
       <!-- Bottom Control Delimeter -->
       <v-row justify="space-between" id="controller">
@@ -137,6 +135,7 @@ export default {
       overlay: false,
       zIndex: 1001,
       muted: true,
+      paused: false,
     };
   },
 
@@ -173,11 +172,19 @@ export default {
       this.isActive[this.model] = true;
     },
 
+    play: function () {
+      if (this.$refs.mainVideo.paused) {
+        this.$refs.mainVideo.play();
+        this.paused = false;
+      } else {
+        this.$refs.mainVideo.pause();
+        this.paused = true;
+      }
+    },
 
     mute: function () {
       this.muted = !this.muted;
       this.$refs.mainVideo.muted = this.muted;
-  
     },
   },
 
@@ -219,7 +226,10 @@ export default {
 }
 
 #header-btn-group {
-  margin-right: 20px;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
 }
 
 a {
@@ -240,6 +250,11 @@ a {
   min-height: 100%;
   display: flex;
   justify-content: center;
+  overflow: hidden;
+}
+
+video {
+  width: 100%;
 }
 
 
