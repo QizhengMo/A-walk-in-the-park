@@ -14,7 +14,7 @@
           <v-sheet height="100%" tile>
             <v-row class="fill-height" align="center" justify="center">
               <div class="display-3">
-                ART {{art["Item_title"] }}
+                ART {{art['Item_title']}}
               </div>
             </v-row>
           </v-sheet>
@@ -93,25 +93,12 @@
 <script>
 import MyHeader from "../components/MyHeader";
 import Models from "../components/Models";
-import { jsonp } from "vue-jsonp";
 
 export default {
   name: "Home",
 
   data() {
     return {
-      artsFilter: [
-        "Morning Star II",
-        "Building Blocks of Life",
-        "Apparatus for Germination of Achaemienis Ambulatii (Pony Plant)",
-        "Plant Form",
-        "Walter Hill Fountain",
-        "Sundial - Hibiscus Garden",
-        "Jemmy Morrill and the brolgas",
-        "Big Red (Red Kangaroo)",
-        "Undercurrent",
-      ],
-      arts: [],
       model: 0,
 
       // initial valye to control the indicator
@@ -119,6 +106,13 @@ export default {
       overlay: false,
       zIndex: 1001,
     };
+  },
+
+  computed: {
+    arts() {
+      console.log(this.$store.getters.arts());
+      return this.$store.getters.arts();
+    }
   },
 
   methods: {
@@ -138,34 +132,9 @@ export default {
   },
 
   created() {
-    let tempList;
+    this.$store.dispatch('fetchArts');
+  }
 
-    jsonp(
-      "https://www.data.brisbane.qld.gov.au/data/api/3/action/datastore_search",
-      {
-        resource_id: "3c972b8e-9340-4b6d-8c7b-2ed988aa3343", // the resource id
-        q: "City Botanic Gardens, Brisbane CBD",
-      }
-    )
-      .then((res) => {
-        tempList = res["result"]["records"];
-      })
-      .then(() => {
-        tempList.forEach(
-          (element) => {
-            for (var i = 0; i < this.artsFilter.length; i++) {
-              if (element["Item_title"] === this.artsFilter[i]) {
-                this.arts[i] = element;
-              }
-            }
-          },
-
-          // this is necessary because VUEJS cannot detect index operation of the array
-          // we have to do these useless operation to invoke it
-          this.arts.push(this.arts.pop())
-        );
-      });
-  },
 };
 </script>
 
