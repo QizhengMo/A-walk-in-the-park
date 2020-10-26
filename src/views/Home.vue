@@ -1,38 +1,63 @@
 <template>
   <v-container id="root">
-    <MyHeader></MyHeader>
+    
+    <v-container id="header" class="d-flex">
+      <div id="title">
+        <h1>A Walk In</h1>
+        <h1>The Park</h1>
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <div class="d-flex" id="header-btn-group">
+        <v-btn class="mx-2" fab color="white">
+          <v-icon>mdi-comment-question-outline</v-icon>
+        </v-btn>
+
+        <v-btn class="mx-2" fab color="white">
+          <v-icon>mdi-skip-next</v-icon>
+        </v-btn>
+
+        <v-btn class="mx-2" fab color="white" @click="mute">
+          <v-icon v-if="muted">mdi-volume-off</v-icon>
+          <v-icon v-if="!muted">mdi-volume-source</v-icon>
+        </v-btn>
+      </div>
+    </v-container>
 
     <div id="main">
-      <!-- Slide Show -->
-      <v-carousel
-        v-model="model"
-        @change="control"
-        hide-delimiters
-        height="100%"
-      >
-        <v-carousel-item v-for="(art, i) in arts" :key="i">
-          <v-sheet height="100%" tile>
-            <v-row class="fill-height" align="center" justify="center">
-              <div class="display-3">
-                ART {{art['Item_title']}}
-              </div>
-            </v-row>
-          </v-sheet>
-        </v-carousel-item>
-      </v-carousel>
+      <v-sheet v-if="arts.length != 0" height="100%" tile>
+        <v-row class="fill-height" align="center" justify="center">
+          <div>
+            <video
+              ref="mainVideo"
+              autoplay
+              muted
+              :src="videoLink"
+              @timeupdate="currentTime = $event.target.currentTime"
+            >
+            </video>
+          </div>
+        </v-row>
+      </v-sheet>
 
       <!-- Bottom Control Delimeter -->
       <v-row justify="space-between" id="controller">
         <v-progress-linear
           color="#03999e"
           buffer-value="0"
-          v-bind:value=progress
+          v-bind:value="progress"
           stream
           id="progress-bar"
         >
         </v-progress-linear>
         <template v-for="(art, i) in arts">
-          <div class="v-col white--text" align="center" v-bind:key="i" style="z-index : 2">
+          <div
+            class="v-col white--text"
+            align="center"
+            v-bind:key="i"
+            style="z-index: 2"
+          >
             <button
               @click="
                 isActive[model] = false;
@@ -98,7 +123,6 @@
 
 
 <script>
-import MyHeader from "../components/MyHeader";
 import Models from "../components/Models";
 
 export default {
@@ -107,23 +131,38 @@ export default {
   data() {
     return {
       model: 0,
-
+      currentTime: 0,
       // initial valye to control the indicator
       isActive: [true, false, false, false, false, false, false, false, false],
       overlay: false,
       zIndex: 1001,
+      muted: true,
     };
   },
 
   computed: {
     arts() {
-      return this.$store.getters.arts().length != 0 ? this.$store.getters.arts() : [];
+      return this.$store.getters.arts().length != 0
+        ? this.$store.getters.arts()
+        : [];
     },
 
     progress() {
-      return this.model * (100/8);
+      return (this.model + this.currentTime / 30) * (100 / 8) ;
+      
+    },
+
+    videoLink() {
+      return `/videos/${this.model+1}.mp4`
     }
   },
+
+  created() {
+    // fetch data when the home page is created
+    this.$store.dispatch("fetchArts");
+  },
+
+  mounted() {},
 
   methods: {
     control: function () {
@@ -133,24 +172,61 @@ export default {
       }
       this.isActive[this.model] = true;
     },
+
+
+    mute: function () {
+      this.muted = !this.muted;
+      this.$refs.mainVideo.muted = this.muted;
+  
+    },
   },
 
   components: {
-    MyHeader,
     Models,
   },
-
-
-  created() {
-    // fetch data when the home page is created
-    this.$store.dispatch('fetchArts');
-  }
-
 };
 </script>
 
 
 <style scoped>
+
+#header {
+  min-width: 100%;
+  position: fixed;
+  z-index: 100;
+}
+
+#title {
+  width: 20%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(
+    0deg,
+    #ffffff00 10%,
+    #03999e 10%,
+    #03999e 90%,
+    #ffffff00 90%,
+    #ffffff00 100%
+  );
+}
+
+#title h1 {
+  line-height: 60px;
+  color: white;
+  font-size: 75px;
+}
+
+#header-btn-group {
+  margin-right: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+
 #root {
   height: 100vh;
   width: 100vw;
@@ -165,6 +241,7 @@ export default {
   display: flex;
   justify-content: center;
 }
+
 
 #controller {
   z-index: 1000;
@@ -188,9 +265,9 @@ export default {
 #progress-bar {
   position: absolute;
   top: 9px;
+  left: 9px;
   z-index: 1;
 }
-
 
 #learn-more-btn {
   position: fixed;

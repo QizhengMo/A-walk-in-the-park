@@ -6,20 +6,6 @@
     </div>
 
     <v-spacer></v-spacer>
-
-    <div v-if="currentRouteName === 'Home'" class="d-flex" id="header-btn-group">
-      <v-btn class="mx-2" fab color="white" @click="greet">
-        <v-icon>mdi-comment-question-outline</v-icon>
-      </v-btn>
-
-      <v-btn class="mx-2" fab color="white">
-        <v-icon>mdi-skip-next</v-icon>
-      </v-btn>
-
-      <v-btn class="mx-2" fab color="white">
-        <v-icon>mdi-volume-source</v-icon>
-      </v-btn>
-    </div>
   </v-container>
 </template>
 
@@ -29,24 +15,9 @@ export default {
   name: "MyHeader",
 
   data: () => ({
-    //
+
   }),
 
-  computed: {
-    currentRouteName() {
-      return this.$route.name;
-    },
-  },
-  
-  components: {},
-
-  methods: {
-    greet: function () {
-      // `this` inside methods points to the Vue instance
-      alert("Hello ");
-      // `event` is the native DOM event
-    },
-  },
 };
 </script>
 
@@ -79,11 +50,4 @@ export default {
   font-size: 75px;
 }
 
-#header-btn-group {
-  margin-right: 20px;
-}
-
-a {
-  text-decoration: none;
-}
 </style>
