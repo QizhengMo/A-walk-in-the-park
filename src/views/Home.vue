@@ -1,6 +1,5 @@
 <template>
   <v-container id="root">
-
     <v-container id="header" class="d-flex">
       <div id="title">
         <h1>A Walk In</h1>
@@ -26,7 +25,10 @@
       </div>
     </v-container>
 
-    <div id="main">
+    <div id="main" v-if="arts.length != 0">
+      <div id="titleSnack">
+        <p>{{arts[model]['Item_title']}}</p>
+      </div>
 
       <div v-if="arts.length != 0">
         <video
@@ -35,8 +37,7 @@
           :muted="muted"
           :src="videoLink"
           @timeupdate="currentTime = $event.target.currentTime"
-        >
-        </video>
+        ></video>
       </div>
 
       <!-- Bottom Control Delimeter -->
@@ -147,13 +148,12 @@ export default {
     },
 
     progress() {
-      return (this.model + this.currentTime / 30) * (100 / 8) ;
-      
+      return (this.model + this.currentTime / 30) * (100 / 8) + 1;
     },
 
     videoLink() {
-      return `/videos/${this.model+1}.mp4`
-    }
+      return `/videos/${this.model + 1}.mp4`;
+    },
   },
 
   created() {
@@ -196,7 +196,6 @@ export default {
 
 
 <style scoped>
-
 #header {
   min-width: 100%;
   position: fixed;
@@ -204,7 +203,6 @@ export default {
 }
 
 #title {
-  width: 20%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -219,6 +217,22 @@ export default {
   );
 }
 
+#titleSnack {
+  position: absolute;
+  top: 20px;
+  background: #03999e;
+  color: white;
+  height: 60px;
+  padding-left: 30px;
+  padding-right: 30px;
+  clip-path: polygon(0 0, 100% 0%,100% 100%, 30px 100%, 0 calc(100% - 30px));
+}
+#titleSnack p {
+  font-size: 30px;
+  line-height: 60px;
+  letter-spacing: 2px;
+}
+
 #title h1 {
   line-height: 60px;
   color: white;
@@ -229,13 +243,11 @@ export default {
   padding-right: 20px;
   display: flex;
   align-items: center;
-  border-radius: 20px;
 }
 
 a {
   text-decoration: none;
 }
-
 
 #root {
   height: 100vh;
@@ -246,17 +258,19 @@ a {
 }
 
 #main {
+  background: black;
   height: 100%;
   min-height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   overflow: hidden;
 }
 
 video {
   width: 100%;
+  min-width: 100%;
 }
-
 
 #controller {
   z-index: 1000;
@@ -280,8 +294,6 @@ video {
 #progress-bar {
   position: absolute;
   top: 9px;
-  left: 9px;
-  z-index: 1;
 }
 
 #learn-more-btn {
