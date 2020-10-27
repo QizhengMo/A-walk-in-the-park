@@ -14,10 +14,11 @@
           fab
           color="white"
           @click="
-            toolInstruction = true;
-            prevInstruction = true;
-            nextInstruction = true;
-            learnInstruction = true;
+            toolInstruction = !toolInstruction;
+            prevInstruction = !prevInstruction;
+            nextInstruction = !nextInstruction;
+            learnInstruction = !learnInstruction;
+            markerInstruction = !markerInstruction;
           "
         >
           <v-icon>mdi-comment-question-outline</v-icon>
@@ -93,12 +94,26 @@
         class="instructions"
         transition="slide-x-transition"
       >
-        Click to learn more about the next artwork.
+        Click to learn more about the artwork.
+      </v-alert>
+
+      <v-alert
+        v-model="markerInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="markerInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        Click on the circle markers to select a specific artwork.
       </v-alert>
 
       <!--Current Art Title-->
       <div v-if="arts.length != 0" id="currentTitle">
-        <p>ARTWORK [{{ arts[model]["Item_title"] }}]</p>
+        <p>{{ arts[model]["Item_title"] }}</p>
       </div>
 
       <!-- Next/Pre control btn-->
@@ -248,6 +263,7 @@ export default {
       prevInstruction: false,
       nextInstruction: false,
       learnInstruction: false,
+      markerInstruction: false,
     };
   },
 
@@ -503,5 +519,10 @@ video {
 #learnInstruction {
   bottom: 30%;
   right: 10%;
+}
+
+#markerInstruction {
+  bottom: 15%;
+  right: 20%;
 }
 </style>

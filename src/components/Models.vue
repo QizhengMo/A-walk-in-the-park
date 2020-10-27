@@ -3,7 +3,7 @@
         <div v-if="model_title === 'Morning Star II'">
             <vue-three-sixty 
                 :amount=27
-                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/morning_star2/"
+                imagePath="/models/morning_star2/"
                 fileName="Layer%20{index}.jpg"
             />
         </div>
@@ -23,7 +23,7 @@
         <div v-else-if="model_title === 'Apparatus for Germination of Achaemienis Ambulatii (Pony Plant)'">
             <vue-three-sixty 
                 :amount=29
-                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/plant2/"
+                imagePath="/models/apparatus/"
                 fileName="{index}.jpg"
             />
         </div>
@@ -31,7 +31,7 @@
         <div v-else-if="model_title === 'Plant Form'">
             <vue-three-sixty 
                 :amount=30
-                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/plant/"
+                imagePath="/models/plant/"
                 fileName="Layer%20{index}.jpg"
             />
         </div>
@@ -63,8 +63,8 @@
 
         <div v-else-if="model_title === 'Jemmy Morrill and the brolgas'">
             <vue-three-sixty 
-                :amount=29
-                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/jemmy/"
+                :amount=17
+                imagePath="/models/jemmy/"
                 fileName="{index}.jpg"
             />
         </div>
@@ -79,7 +79,7 @@
         <div v-else-if="model_title === 'Undercurrent'">
             <vue-three-sixty 
                 :amount=30
-                imagePath="https://raw.githubusercontent.com/tobythy/botanic-garden-brisbane/main/models/undercurrent/"
+                imagePath="/models/undercurrent/"
                 fileName="Layer%20{index}.jpg"
             />
         </div>
