@@ -9,7 +9,17 @@
       <v-spacer></v-spacer>
 
       <div id="header-btn-group">
-        <v-btn class="mx-2" fab color="white">
+        <v-btn
+          class="mx-2"
+          fab
+          color="white"
+          @click="
+            toolInstruction = true;
+            prevInstruction = true;
+            nextInstruction = true;
+            learnInstruction = true;
+          "
+        >
           <v-icon>mdi-comment-question-outline</v-icon>
         </v-btn>
 
@@ -26,9 +36,69 @@
     </v-container>
 
     <div id="main">
+      <!--Instructions-->
+      <v-alert
+        v-model="toolInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="toolInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        <v-icon>mdi-comment-question-outline</v-icon> Click to view instructions
+        again.<br />
+        <v-icon>mdi-play</v-icon> Click to play/pause background video.<br />
+        <v-icon>mdi-volume-off</v-icon> Click to mute/unmute video.
+      </v-alert>
+
+      <v-alert
+        v-model="prevInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="prevInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        Click to view the previous artwork.
+      </v-alert>
+
+      <v-alert
+        v-model="nextInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="nextInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        Click to view the next artwork.
+      </v-alert>
+
+      <v-alert
+        v-model="learnInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="learnInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        Click to learn more about the next artwork.
+      </v-alert>
+
       <!--Current Art Title-->
       <div v-if="arts.length != 0" id="currentTitle">
-        <p>{{ arts[model]["Item_title"] }}</p>
+        <p>ARTWORK [{{ arts[model]["Item_title"] }}]</p>
       </div>
 
       <!-- Next/Pre control btn-->
@@ -174,7 +244,10 @@ export default {
       zIndex: 1001,
       muted: true,
       paused: false,
-      google: null,
+      toolInstruction: false,
+      prevInstruction: false,
+      nextInstruction: false,
+      learnInstruction: false,
     };
   },
 
@@ -403,5 +476,32 @@ video {
   position: absolute;
   top: 0px;
   right: 0px;
+}
+
+/** Instructions */
+
+.instructions {
+  position: fixed;
+  z-index: 100;
+}
+
+#toolInstruction {
+  right: 0px;
+  top: 120px;
+}
+
+#prevInstruction {
+  top: calc(50vh - 80px);
+  left: 0px;
+}
+
+#nextInstruction {
+  top: calc(50vh - 80px);
+  right: 0px;
+}
+
+#learnInstruction {
+  bottom: 30%;
+  right: 10%;
 }
 </style>
