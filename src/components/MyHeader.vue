@@ -29,7 +29,6 @@ export default {
 }
 
 #title {
-  width: 20%;
   display: flex;
   align-items: center;
   flex-direction: column;

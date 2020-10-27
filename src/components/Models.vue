@@ -105,19 +105,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
-    .model-area{
+    .model-area {
         height: 100%;
         max-height: 100%;
     }
 
-    .model-area div{
+    .model-area > div{
         height: 100%;
         min-height: 100%;
     }
 
-    iframe {
+    .model-area > div > div{
+        min-height: 90%;
+        height: 90%;
+    }
+
+    .model-area iframe {
         height: 100%;
         width: 100%;
         min-height: 100%;
@@ -127,5 +132,17 @@ export default {
         height: 100%;
         width: 100%;
         min-height: 100%;
+    }
+
+    .v360-viewer-container {
+        height: 100%;
+    }
+    .v360-fullscreen-toggle {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        color: #03999e;
+        height: 20px;
+
     }
 </style>

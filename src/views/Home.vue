@@ -84,6 +84,14 @@
       <v-overlay :z-index="zIndex" :value="overlay">
         <v-container v-if="arts.length != 0" class="black--text" id="overlay">
           <v-row>
+            <v-col cols="6" id="overlay-text">
+              <h1>{{ arts[model]["Item_title"] }}</h1>
+              <p>Artist: {{ arts[model]["Artist"] }}</p>
+              <p>Material: {{ arts[model]["Material"] }}</p>
+              <p>Installed Year: {{ arts[model]["Installed"] }}</p>
+              <p>{{ arts[model]["Description"] }}</p>
+
+            </v-col>
             <v-col cols="6">
               <Models
                 v-bind:model_title="arts[model]['Item_title']"
@@ -93,24 +101,20 @@
             </v-col>
 
             <!-- ART Info-->
-            <v-col cols="6" id="overlay-text">
-              <h1>{{ arts[model]["Item_title"] }}</h1>
-              <p>Artist: {{ arts[model]["Artist"] }}</p>
-              <p>Material: {{ arts[model]["Material"] }}</p>
-              <p>Installed Year: {{ arts[model]["Installed"] }}</p>
-              <p>{{ arts[model]["Description"] }}</p>
-            </v-col>
+
           </v-row>
 
           <!-- EXIT BTN-->
 
           <v-btn
-            class="white--text"
-            color="teal"
+            icon
             @click="overlay = false"
             id="overlay-exit"
+            color="#03999e"
+            x-large
           >
-            Hide Overlay
+            <v-icon>mdi-close</v-icon>
+
           </v-btn>
         </v-container>
       </v-overlay>
@@ -204,7 +208,6 @@ export default {
 }
 
 #title {
-  width: 20%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -297,7 +300,7 @@ video {
   background-color: white;
   height: 70vh;
   width: 70vw;
-  padding: 30px;
+  padding: 20px;
 
   box-shadow: 10px 10px #03999e;
   border: solid 2px #03999e;
@@ -316,7 +319,7 @@ video {
 
 #overlay-exit {
   position: absolute;
-  bottom: 5%;
-  right: 5%;
+  top: 0px;
+  right: 0px;
 }
 </style>
