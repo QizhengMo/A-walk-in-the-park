@@ -56,6 +56,15 @@ function shuffle(a) {
   return a;
 }
 
+function myRandom(range, notMe) {
+  var result = Math.floor(Math.random() * Math.floor(range));
+  if (result != notMe) {
+    return result;
+  } else {
+    return myRandom(range, notMe);
+  }
+}
+
 export default {
   name: "About",
 
@@ -86,12 +95,8 @@ export default {
           var correctIndex = Math.floor(Math.random() * Math.floor(2));
           var question = [];
           question[correctIndex] = `${this.arts[i]["Artist"]}`;
-          question[1 - correctIndex] = `${
-            this.arts[Math.floor(Math.random() * Math.floor(this.arts.length))][
-              "Artist"
-            ]
-          }`;
-          question[2] = `Who is the [ARTIST] of ${this.arts[i]["Item_title"]}`;
+          question[1 - correctIndex] = `${this.arts[myRandom(this.arts.length, i)]["Artist"]}`;
+          question[2] = `Who is the [ARTIST] of ${this.arts[i]["Item_title"]}?`;
           question[3] = correctIndex;
 
           questions.push(question);
@@ -99,12 +104,8 @@ export default {
           correctIndex = Math.floor(Math.random() * Math.floor(2));
           question = [];
           question[correctIndex] = `${this.arts[i]["Material"]}`;
-          question[1 - correctIndex] = `${
-            this.arts[Math.floor(Math.random() * Math.floor(this.arts.length))][
-              "Material"
-            ]
-          }`;
-          question[2] = `What is the [MATERIAL] of ${this.arts[i]["Item_title"]}`;
+          question[1 - correctIndex] = `${this.arts[myRandom(this.arts.length, i)]["Material"]}`;
+          question[2] = `What is the [MATERIAL] of ${this.arts[i]["Item_title"]}?`;
           question[3] = correctIndex;
 
           questions.push(question);
@@ -112,18 +113,13 @@ export default {
           correctIndex = Math.floor(Math.random() * Math.floor(2));
           question = [];
           question[correctIndex] = `${this.arts[i]["Installed"]}`;
-          question[1 - correctIndex] = `${
-            this.arts[Math.floor(Math.random() * Math.floor(this.arts.length))][
-              "Installed"
-            ]
-          }`;
-          question[2] = `Which is the installation [YEAR] of ${this.arts[i]["Item_title"]}`;
+          question[1 - correctIndex] = `${Math.floor(Math.random() * Math.floor(120)) + 1900}`;
+          question[2] = `Which is the installation [YEAR] of ${this.arts[i]["Item_title"]}?`;
           question[3] = correctIndex;
 
           questions.push(question);
         }
         shuffle(questions);
-        console.log(questions);
         return questions;
       }
     },
