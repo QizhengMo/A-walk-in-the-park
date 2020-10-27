@@ -1,6 +1,5 @@
 <template>
   <v-container id="root">
-
     <v-container id="header" class="d-flex">
       <div id="title">
         <h1>A Walk In</h1>
@@ -27,7 +26,29 @@
     </v-container>
 
     <div id="main">
+      <!--Current Art Title-->
+      <div v-if="arts.length != 0" id="currentTitle">
+        <p>{{ arts[model]["Item_title"] }}</p>
+      </div>
 
+      <!-- Next/Pre control btn-->
+      <v-btn
+        fab
+        color="white"
+        style="position: fixed; top: 50vh; left: 20px; z-index: 100"
+        @click="prev"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        color="white"
+        style="position: fixed; top: 50vh; right: 20px; z-index: 100"
+        @click="next"
+      >
+        <v-icon>mdi-arrow-right</v-icon>
+      </v-btn>
+      <!--Current Art Video-->
       <div v-if="arts.length != 0">
         <video
           ref="mainVideo"
@@ -35,8 +56,7 @@
           :muted="muted"
           :src="videoLink"
           @timeupdate="currentTime = $event.target.currentTime"
-        >
-        </video>
+        ></video>
       </div>
 
       <!-- Bottom Control Delimeter -->
@@ -86,24 +106,30 @@
           <v-row>
             <v-col>
               <div v-if="arts.length != 0" id="overlay-text">
-                  <h1>{{ arts[model]["Item_title"] }}</h1>
-                  <p>Artist: {{ arts[model]["Artist"] }}</p>
-                  <p>Material: {{ arts[model]["Material"] }}</p>
-                  <p>Installed Year: {{ arts[model]["Installed"] }}</p>
-                  <p>{{ arts[model]["Description"] }}</p>
+                <h1>{{ arts[model]["Item_title"] }}</h1>
+                <p>Artist: {{ arts[model]["Artist"] }}</p>
+                <p>Material: {{ arts[model]["Material"] }}</p>
+                <p>Installed Year: {{ arts[model]["Installed"] }}</p>
+                <p>{{ arts[model]["Description"] }}</p>
               </div>
+              <!-- ART Map-->
               <div id="googleMapContainer">
                 <GmapMap
-                  :center="{lat:-27.475389, lng:153.030806}"
-                  :zoom="16"
+                  :center="mapCenter"
+                  :zoom="17"
                   map-type-id="terrain"
-                  style="width: 500px; height: 300px"
+                  style="width: 100%; height: 100%"
                 >
+                  <GmapMarker
+                    :position="mapCenter"
+                    :clickable="true"
+                    :draggable="true"
+                  />
                 </GmapMap>
               </div>
-
             </v-col>
 
+            <!-- ART Model-->
             <v-col v-if="arts.length != 0">
               <Models
                 v-bind:model_title="arts[model]['Item_title']"
@@ -111,9 +137,6 @@
               >
               </Models>
             </v-col>
-
-            <!-- ART Info-->
-
           </v-row>
 
           <!-- EXIT BTN-->
@@ -126,7 +149,6 @@
             x-large
           >
             <v-icon>mdi-close</v-icon>
-
           </v-btn>
         </v-container>
       </v-overlay>
@@ -164,23 +186,23 @@ export default {
     },
 
     progress() {
-      return (this.model + this.currentTime / 30) * (100 / 8) ;
-      
+      return (this.model + this.currentTime / 30) * (100 / 8) + 1;
     },
 
     videoLink() {
-      return `/videos/${this.model+1}.mp4`
-    },
-
-    mapConfig() {
-      return {
-        center: this.mapCenter
-      };
+      return `/videos/${this.model + 1}.mp4`;
     },
 
     mapCenter() {
-      return { lat: 3, lng: 101 };
-    }
+      if (this.arts.length == 0) {
+        return { lat: -27.474401, lng: 153.028096 };
+      } else {
+        return {
+          lat: Number(this.arts[this.model]["Latitude"]),
+          lng: Number(this.arts[this.model]["Longitude"]),
+        };
+      }
+    },
   },
 
   created() {
@@ -212,9 +234,29 @@ export default {
       this.$refs.mainVideo.muted = this.muted;
     },
 
+    prev() {
+      this.isActive[this.model] = false;
+      if (this.model === 0) {
+        this.model = this.arts.length - 1;
+      } else {
+        this.model -= 1;
+      }
+      this.isActive[this.model] = true;
+    },
+
+    next() {
+      this.isActive[this.model] = false;
+      if (this.model === this.arts.length - 1) {
+        this.model = 0;
+      } else {
+        this.model += 1;
+      }
+      this.isActive[this.model] = true;
+    },
+
     overlayToggle() {
       this.overlay = !this.overlay;
-    }
+    },
   },
 
   components: {
@@ -225,7 +267,6 @@ export default {
 
 
 <style scoped>
-
 #header {
   min-width: 100%;
   position: fixed;
@@ -264,7 +305,6 @@ a {
   text-decoration: none;
 }
 
-
 #root {
   height: 100vh;
   width: 100vw;
@@ -281,10 +321,23 @@ a {
   overflow: hidden;
 }
 
+#currentTitle {
+  position: fixed;
+  top: 30px;
+  height: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  line-height: 50px;
+  font-size: 30px;
+  letter-spacing: 2px;
+  color: white;
+  background: #03999e;
+  clip-path: polygon(0 0, 100% 0%, 100% 100%, 30px 100%, 0 calc(100% - 20px));
+}
+
 video {
   width: 100%;
 }
-
 
 #controller {
   z-index: 1000;
@@ -308,7 +361,6 @@ video {
 #progress-bar {
   position: absolute;
   top: 9px;
-  left: 9px;
   z-index: 1;
 }
 
@@ -346,7 +398,6 @@ video {
 #googleMapContainer {
   flex-grow: 1;
 }
-
 
 #overlay-exit {
   position: absolute;
