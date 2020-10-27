@@ -108,16 +108,18 @@ export default {
     .model-area {
         height: 100%;
         max-height: 100%;
+        min-width: 100%;
+        display: flex;
     }
 
     .model-area > div{
-        height: 100%;
-        min-height: 100%;
+        flex-grow: 1;
+        overflow: hidden;
     }
 
     .model-area > div > div{
-        min-height: 90%;
-        height: 90%;
+        min-height: 55vh;
+        height: 55vh;
     }
 
     .model-area iframe {
@@ -128,7 +130,6 @@ export default {
 
     vue-three-sixty {
         height: 100%;
-        width: 100%;
         min-height: 100%;
     }
 

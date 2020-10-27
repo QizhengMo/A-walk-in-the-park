@@ -1,6 +1,5 @@
 <template>
   <v-container id="root">
-
     <v-container id="header" class="d-flex">
       <div id="title">
         <h1>A Walk In</h1>
@@ -10,7 +9,17 @@
       <v-spacer></v-spacer>
 
       <div id="header-btn-group">
-        <v-btn class="mx-2" fab color="white">
+        <v-btn
+          class="mx-2"
+          fab
+          color="white"
+          @click="
+            toolInstruction = true;
+            prevInstruction = true;
+            nextInstruction = true;
+            learnInstruction = true;
+          "
+        >
           <v-icon>mdi-comment-question-outline</v-icon>
         </v-btn>
 
@@ -27,7 +36,89 @@
     </v-container>
 
     <div id="main">
+      <!--Instructions-->
+      <v-alert
+        v-model="toolInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="toolInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        <v-icon>mdi-comment-question-outline</v-icon> Click to view instructions
+        again.<br />
+        <v-icon>mdi-play</v-icon> Click to play/pause background video.<br />
+        <v-icon>mdi-volume-off</v-icon> Click to mute/unmute video.
+      </v-alert>
 
+      <v-alert
+        v-model="prevInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="prevInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        Click to view the previous artwork.
+      </v-alert>
+
+      <v-alert
+        v-model="nextInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="nextInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        Click to view the next artwork.
+      </v-alert>
+
+      <v-alert
+        v-model="learnInstruction"
+        dismissible
+        color="cyan"
+        border="left"
+        elevation="2"
+        colored-border
+        id="learnInstruction"
+        class="instructions"
+        transition="slide-x-transition"
+      >
+        Click to learn more about the next artwork.
+      </v-alert>
+
+      <!--Current Art Title-->
+      <div v-if="arts.length != 0" id="currentTitle">
+        <p>ARTWORK [{{ arts[model]["Item_title"] }}]</p>
+      </div>
+
+      <!-- Next/Pre control btn-->
+      <v-btn
+        fab
+        color="white"
+        style="position: fixed; top: 50vh; left: 20px; z-index: 100"
+        @click="prev"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        color="white"
+        style="position: fixed; top: 50vh; right: 20px; z-index: 100"
+        @click="next"
+      >
+        <v-icon>mdi-arrow-right</v-icon>
+      </v-btn>
+      <!--Current Art Video-->
       <div v-if="arts.length != 0">
         <video
           ref="mainVideo"
@@ -35,8 +126,7 @@
           :muted="muted"
           :src="videoLink"
           @timeupdate="currentTime = $event.target.currentTime"
-        >
-        </video>
+        ></video>
       </div>
 
       <!-- Bottom Control Delimeter -->
@@ -75,33 +165,48 @@
         dark
         color="#03999e"
         id="learn-more-btn"
-        @click="overlay = !overlay"
+        @click="overlayToggle"
       >
         Learn More
       </v-btn>
 
       <!-- Popup Overlay -->
       <v-overlay :z-index="zIndex" :value="overlay">
-        <v-container v-if="arts.length != 0" class="black--text" id="overlay">
+        <v-container class="black--text" id="overlay">
           <v-row>
-            <v-col cols="6" id="overlay-text">
-              <h1>{{ arts[model]["Item_title"] }}</h1>
-              <p>Artist: {{ arts[model]["Artist"] }}</p>
-              <p>Material: {{ arts[model]["Material"] }}</p>
-              <p>Installed Year: {{ arts[model]["Installed"] }}</p>
-              <p>{{ arts[model]["Description"] }}</p>
-
+            <v-col>
+              <div v-if="arts.length != 0" id="overlay-text">
+                <h1>{{ arts[model]["Item_title"] }}</h1>
+                <p>Artist: {{ arts[model]["Artist"] }}</p>
+                <p>Material: {{ arts[model]["Material"] }}</p>
+                <p>Installed Year: {{ arts[model]["Installed"] }}</p>
+                <p>{{ arts[model]["Description"] }}</p>
+              </div>
+              <!-- ART Map-->
+              <div id="googleMapContainer">
+                <GmapMap
+                  :center="mapCenter"
+                  :zoom="17"
+                  map-type-id="terrain"
+                  style="width: 100%; height: 100%"
+                >
+                  <GmapMarker
+                    :position="mapCenter"
+                    :clickable="true"
+                    :draggable="true"
+                  />
+                </GmapMap>
+              </div>
             </v-col>
-            <v-col cols="6">
+
+            <!-- ART Model-->
+            <v-col v-if="arts.length != 0">
               <Models
                 v-bind:model_title="arts[model]['Item_title']"
                 id="model-area"
               >
               </Models>
             </v-col>
-
-            <!-- ART Info-->
-
           </v-row>
 
           <!-- EXIT BTN-->
@@ -114,7 +219,6 @@
             x-large
           >
             <v-icon>mdi-close</v-icon>
-
           </v-btn>
         </v-container>
       </v-overlay>
@@ -140,6 +244,10 @@ export default {
       zIndex: 1001,
       muted: true,
       paused: false,
+      toolInstruction: false,
+      prevInstruction: false,
+      nextInstruction: false,
+      learnInstruction: false,
     };
   },
 
@@ -151,21 +259,29 @@ export default {
     },
 
     progress() {
-      return (this.model + this.currentTime / 30) * (100 / 8) ;
-      
+      return (this.model + this.currentTime / 30) * (100 / 8) + 1;
     },
 
     videoLink() {
-      return `/videos/${this.model+1}.mp4`
-    }
+      return `/videos/${this.model + 1}.mp4`;
+    },
+
+    mapCenter() {
+      if (this.arts.length == 0) {
+        return { lat: -27.474401, lng: 153.028096 };
+      } else {
+        return {
+          lat: Number(this.arts[this.model]["Latitude"]),
+          lng: Number(this.arts[this.model]["Longitude"]),
+        };
+      }
+    },
   },
 
   created() {
     // fetch data when the home page is created
     this.$store.dispatch("fetchArts");
   },
-
-  mounted() {},
 
   methods: {
     control: function () {
@@ -190,6 +306,30 @@ export default {
       this.muted = !this.muted;
       this.$refs.mainVideo.muted = this.muted;
     },
+
+    prev() {
+      this.isActive[this.model] = false;
+      if (this.model === 0) {
+        this.model = this.arts.length - 1;
+      } else {
+        this.model -= 1;
+      }
+      this.isActive[this.model] = true;
+    },
+
+    next() {
+      this.isActive[this.model] = false;
+      if (this.model === this.arts.length - 1) {
+        this.model = 0;
+      } else {
+        this.model += 1;
+      }
+      this.isActive[this.model] = true;
+    },
+
+    overlayToggle() {
+      this.overlay = !this.overlay;
+    },
   },
 
   components: {
@@ -200,7 +340,6 @@ export default {
 
 
 <style scoped>
-
 #header {
   min-width: 100%;
   position: fixed;
@@ -239,7 +378,6 @@ a {
   text-decoration: none;
 }
 
-
 #root {
   height: 100vh;
   width: 100vw;
@@ -256,10 +394,23 @@ a {
   overflow: hidden;
 }
 
+#currentTitle {
+  position: fixed;
+  top: 30px;
+  height: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  line-height: 50px;
+  font-size: 30px;
+  letter-spacing: 2px;
+  color: white;
+  background: #03999e;
+  clip-path: polygon(0 0, 100% 0%, 100% 100%, 30px 100%, 0 calc(100% - 20px));
+}
+
 video {
   width: 100%;
 }
-
 
 #controller {
   z-index: 1000;
@@ -283,7 +434,6 @@ video {
 #progress-bar {
   position: absolute;
   top: 9px;
-  left: 9px;
   z-index: 1;
 }
 
@@ -301,15 +451,16 @@ video {
   height: 70vh;
   width: 70vw;
   padding: 20px;
-
+  padding-top: 22px;
   box-shadow: 10px 10px #03999e;
   border: solid 2px #03999e;
 }
 
-#overlay .row {
-  max-height: 100%;
-  min-height: 100%;
-  overflow: hidden;
+#overlay .col {
+  height: 65vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #model-area {
@@ -317,9 +468,40 @@ video {
   height: 100%;
 }
 
+#googleMapContainer {
+  flex-grow: 1;
+}
+
 #overlay-exit {
   position: absolute;
   top: 0px;
   right: 0px;
+}
+
+/** Instructions */
+
+.instructions {
+  position: fixed;
+  z-index: 100;
+}
+
+#toolInstruction {
+  right: 0px;
+  top: 120px;
+}
+
+#prevInstruction {
+  top: calc(50vh - 80px);
+  left: 0px;
+}
+
+#nextInstruction {
+  top: calc(50vh - 80px);
+  right: 0px;
+}
+
+#learnInstruction {
+  bottom: 30%;
+  right: 10%;
 }
 </style>
