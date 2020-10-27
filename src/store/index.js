@@ -59,6 +59,7 @@ export default new Vuex.Store({
             for (var i = 0; i < artsFilter.length; i++) {
               if (element["Item_title"] === artsFilter[i]) {
                 arts[i] = element;
+                console.log(element);
               }
             }
           },

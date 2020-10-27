@@ -75,24 +75,36 @@
         dark
         color="#03999e"
         id="learn-more-btn"
-        @click="overlay = !overlay"
+        @click="overlayToggle"
       >
         Learn More
       </v-btn>
 
       <!-- Popup Overlay -->
       <v-overlay :z-index="zIndex" :value="overlay">
-        <v-container v-if="arts.length != 0" class="black--text" id="overlay">
+        <v-container class="black--text" id="overlay">
           <v-row>
-            <v-col cols="6" id="overlay-text">
-              <h1>{{ arts[model]["Item_title"] }}</h1>
-              <p>Artist: {{ arts[model]["Artist"] }}</p>
-              <p>Material: {{ arts[model]["Material"] }}</p>
-              <p>Installed Year: {{ arts[model]["Installed"] }}</p>
-              <p>{{ arts[model]["Description"] }}</p>
+            <v-col>
+              <div v-if="arts.length != 0" id="overlay-text">
+                  <h1>{{ arts[model]["Item_title"] }}</h1>
+                  <p>Artist: {{ arts[model]["Artist"] }}</p>
+                  <p>Material: {{ arts[model]["Material"] }}</p>
+                  <p>Installed Year: {{ arts[model]["Installed"] }}</p>
+                  <p>{{ arts[model]["Description"] }}</p>
+              </div>
+              <div id="googleMapContainer">
+                <GmapMap
+                  :center="{lat:-27.475389, lng:153.030806}"
+                  :zoom="16"
+                  map-type-id="terrain"
+                  style="width: 500px; height: 300px"
+                >
+                </GmapMap>
+              </div>
 
             </v-col>
-            <v-col cols="6">
+
+            <v-col v-if="arts.length != 0">
               <Models
                 v-bind:model_title="arts[model]['Item_title']"
                 id="model-area"
@@ -140,6 +152,7 @@ export default {
       zIndex: 1001,
       muted: true,
       paused: false,
+      google: null,
     };
   },
 
@@ -157,6 +170,16 @@ export default {
 
     videoLink() {
       return `/videos/${this.model+1}.mp4`
+    },
+
+    mapConfig() {
+      return {
+        center: this.mapCenter
+      };
+    },
+
+    mapCenter() {
+      return { lat: 3, lng: 101 };
     }
   },
 
@@ -164,8 +187,6 @@ export default {
     // fetch data when the home page is created
     this.$store.dispatch("fetchArts");
   },
-
-  mounted() {},
 
   methods: {
     control: function () {
@@ -190,6 +211,10 @@ export default {
       this.muted = !this.muted;
       this.$refs.mainVideo.muted = this.muted;
     },
+
+    overlayToggle() {
+      this.overlay = !this.overlay;
+    }
   },
 
   components: {
@@ -301,21 +326,27 @@ video {
   height: 70vh;
   width: 70vw;
   padding: 20px;
-
+  padding-top: 22px;
   box-shadow: 10px 10px #03999e;
   border: solid 2px #03999e;
 }
 
-#overlay .row {
-  max-height: 100%;
-  min-height: 100%;
-  overflow: hidden;
+#overlay .col {
+  height: 65vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #model-area {
   min-height: 100%;
   height: 100%;
 }
+
+#googleMapContainer {
+  flex-grow: 1;
+}
+
 
 #overlay-exit {
   position: absolute;
