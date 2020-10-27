@@ -9,7 +9,7 @@
         Home
       </v-btn>
       <v-btn text to="quiz">
-        Quiz
+        Challenge
       </v-btn>
       <v-btn text class="active" to="about">
         About
@@ -21,7 +21,7 @@
         Home
       </v-btn>
       <v-btn text class="active" to="quiz">
-        Quiz
+        Challenge
       </v-btn>
       <v-btn text to="about">
         About
@@ -33,7 +33,7 @@
         Home
       </v-btn>
       <v-btn text to="quiz">
-        Quiz
+        Challenge
       </v-btn>
       <v-btn text to="about">
         About

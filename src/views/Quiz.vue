@@ -1,23 +1,44 @@
 <template>
   <v-container id="root">
-
     <MyHeader></MyHeader>
 
     <v-container v-if="questions.length != 0" id="main">
-      <div id="quiz-title" class="content-box">
-        <h1>Challenge</h1> <h1>Current Score: {{currentScore}}</h1>
+      <div v-if="!finished">
+        <div id="quiz-title" class="content-box">
+          <h1>Challenge</h1>
+          <h1>Current Score: {{ currentScore }}</h1>
+        </div>
+
+        <div id="quiz-questions" class="content-box">
+          <h2>
+            Q{{ currentQuestion }}: {{ questions[currentQuestion - 1][2] }}
+          </h2>
+
+          <v-btn block class="white--text" color="#03999e" v-on:click="answerA">
+            {{ questions[currentQuestion - 1][0] }}
+          </v-btn>
+
+          <v-btn block class="white--text" color="#03999e" v-on:click="answerB">
+            {{ questions[currentQuestion - 1][1] }}
+          </v-btn>
+        </div>
       </div>
 
-      <div id="quiz-questions" class="content-box">
-        <h2>Q{{currentQuestion}}: {{questions[currentQuestion - 1][2]}}</h2>
+      <div v-else>
+        <div id="quiz-result" class="content-box">
+          <h1>Congratulation!</h1>
+          <h2>Your Score: {{ currentScore }}</h2>
+          <h2>Your Highest Score: {{ highScore }}</h2>
 
-        <v-btn block class="white--text" color="#03999e" v-on:click="answerA">
-          {{questions[currentQuestion - 1][0]}}
-        </v-btn>
-
-        <v-btn block class="white--text" color="#03999e" v-on:click="answerB">
-          {{questions[currentQuestion - 1][1]}}
-        </v-btn>
+          <v-btn
+          class="white--text"
+          color="#03999e"
+          x-large
+          @click="retry"
+          >
+            Retry
+          </v-btn>
+        </div>
       </div>
     </v-container>
   </v-container>
@@ -25,23 +46,38 @@
 
 
 <script>
-import MyHeader from '../components/MyHeader'
+import MyHeader from "../components/MyHeader";
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export default {
-
   name: "About",
 
   data: () => ({
     currentQuestion: 1,
     currentScore: 0,
+    highScore: 0,
+    finished: false,
   }),
 
   computed: {
     arts() {
-      return this.$store.getters.arts().length != 0 ? this.$store.getters.arts() : [];
+      return this.$store.getters.arts().length != 0
+        ? this.$store.getters.arts()
+        : [];
     },
+
+    /**
+     * Generate questions for the quiz, this will work as computed data
+     * because VUE will cache the computed result if the dependency remain the same
+     */
     questions() {
-      
       if (this.arts.length == 0) {
         return [];
       } else {
@@ -49,46 +85,93 @@ export default {
         for (var i = 0; i < this.arts.length; i++) {
           var correctIndex = Math.floor(Math.random() * Math.floor(2));
           var question = [];
-          question[correctIndex] = `${this.arts[i]['Artist']}`;
-          question[1 - correctIndex] = `${this.arts[Math.floor(Math.random() * Math.floor(9))]['Artist']}`;
-          question[2] = `Who is the Artist of ${this.arts[i]['Item_title']}`;
+          question[correctIndex] = `${this.arts[i]["Artist"]}`;
+          question[1 - correctIndex] = `${
+            this.arts[Math.floor(Math.random() * Math.floor(this.arts.length))][
+              "Artist"
+            ]
+          }`;
+          question[2] = `Who is the [ARTIST] of ${this.arts[i]["Item_title"]}`;
+          question[3] = correctIndex;
+
+          questions.push(question);
+
+          correctIndex = Math.floor(Math.random() * Math.floor(2));
+          question = [];
+          question[correctIndex] = `${this.arts[i]["Material"]}`;
+          question[1 - correctIndex] = `${
+            this.arts[Math.floor(Math.random() * Math.floor(this.arts.length))][
+              "Material"
+            ]
+          }`;
+          question[2] = `What is the [MATERIAL] of ${this.arts[i]["Item_title"]}`;
+          question[3] = correctIndex;
+
+          questions.push(question);
+
+          correctIndex = Math.floor(Math.random() * Math.floor(2));
+          question = [];
+          question[correctIndex] = `${this.arts[i]["Installed"]}`;
+          question[1 - correctIndex] = `${
+            this.arts[Math.floor(Math.random() * Math.floor(this.arts.length))][
+              "Installed"
+            ]
+          }`;
+          question[2] = `Which is the installation [YEAR] of ${this.arts[i]["Item_title"]}`;
           question[3] = correctIndex;
 
           questions.push(question);
         }
-        console.log(questions)
+        shuffle(questions);
+        console.log(questions);
         return questions;
       }
     },
-
   },
 
   mounted() {
     if (this.arts.length == 0) {
-      this.$store.dispatch('fetchArts');
-    } 
+      this.$store.dispatch("fetchArts");
+    }
   },
 
   methods: {
     answerA() {
-      this.currentQuestion += 1;
       if (this.questions[this.currentQuestion][3] === 0) {
         this.currentScore += 1;
       }
+      this.currentQuestion += 1;
+      this.checkFinished();
     },
 
     answerB() {
-      this.currentQuestion += 1;
       if (this.questions[this.currentQuestion][3] === 1) {
         this.currentScore += 1;
       }
+      this.currentQuestion += 1;
+      this.checkFinished();
+
     },
+
+    checkFinished() {
+      if (this.currentQuestion === 9) {
+        this.finished = true;
+        if (this.currentScore > this.highScore) {
+          this.highScore = this.currentScore;
+        }
+      }
+    },
+    retry() {
+      shuffle(this.questions);
+      this.currentQuestion = 1;
+      this.currentScore = 0;
+      this.finished = false;
+    }
   },
 
   components: {
     MyHeader,
   },
-
 };
 </script>
 
@@ -122,7 +205,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white; 
+  background: white;
   box-shadow: 10px 10px #03999e;
   border: solid 2px #03999e;
 }
@@ -134,7 +217,7 @@ export default {
   justify-content: space-between;
 }
 
-#quiz-questions{
+#quiz-questions {
   height: 50vh;
   margin-top: 5vh;
   display: flex;
@@ -147,9 +230,16 @@ export default {
   color: black;
 }
 
+#quiz-result {
+  height: 30vh;
+  margin-top: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+
+}
 button {
   margin-top: 50px;
 }
-
-
 </style>
