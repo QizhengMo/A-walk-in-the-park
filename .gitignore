@@ -2,6 +2,7 @@
 node_modules
 /dist
 /public/videos
+/public/models
 
 # local env files
 .env.local
