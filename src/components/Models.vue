@@ -93,7 +93,7 @@
         </div>
 
         <div v-else>
-            <p>model not exist</p>
+            <p>{{ model-title }}</p>
         </div>
 
     </div>
