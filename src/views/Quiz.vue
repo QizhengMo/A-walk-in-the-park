@@ -5,8 +5,8 @@
     <v-container v-if="questions.length != 0" id="main">
       <div v-if="!finished">
         <div id="quiz-title" class="content-box">
-          <h1>Challenge</h1>
-          <h1>Current Score: {{ currentScore }}</h1>
+          <h2>Quiz</h2>
+          <h2>Current Score: {{ currentScore }}</h2>
         </div>
 
         <div id="quiz-questions" class="content-box">
@@ -27,7 +27,7 @@
       <div v-else>
         <div id="quiz-result" class="content-box">
           <h1>Congratulations!</h1>
-          <h2>Your Score: {{ currentScore }}</h2>
+          <h2>Your Score: {{ currentScore }} / 8</h2>
           <h2>Your Highest Score: {{ highScore }}</h2>
 
           <v-btn
@@ -208,8 +208,8 @@ export default {
 
 #quiz-title {
   height: 10vh;
-  padding-left: 20vw;
-  padding-right: 20px;
+  padding-left: 2em;
+  padding-right: 2em;
   justify-content: space-between;
 }
 

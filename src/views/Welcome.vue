@@ -62,10 +62,10 @@
 }
 
 #subtitle {
-  margin-top: 30px;
-  line-height: 40px;
+  margin-top: 1em;
+  line-height: 1.5em;
   color: white;
-  font-size: 50px;
+  font-size: 2em;
 }
 
 #subtitle p {
@@ -74,8 +74,8 @@
 }
 
 button {
-  width: 250px;
-  height: 100px;
+  width: 15em;
+  height: 5em;
   margin-top: 10vh;
   background-color: #03999e;
   transition-duration: 0.4s;
@@ -94,7 +94,7 @@ button:hover {
 
 button a {
   text-decoration: none;
-  font-size: 30px;
+  font-size: 1.5em;
   font-weight: bold;
   color: white;
 }
