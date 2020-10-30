@@ -13,7 +13,7 @@ Vue.use(VueThreeSixty)
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyBGoP3uWTneSQHV2vNHkkp25SA8jdKg5Tg',
+    key: 'GOOGLE API PLACE HOLDER',
   },
   installComponents: true
 })
