@@ -1,4 +1,6 @@
-# deco7180
+# DECO7180 Course Project
+
+A Walk in the Park aims to provide a virtual tour experience of the Brisbane botanica garden during the difficult time of COVID-19.
 
 ## Project setup
 ```
